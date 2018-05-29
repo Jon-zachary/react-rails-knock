@@ -6,3 +6,4 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 juices = Juice.create([{ name: 'Grape', sugar: 36}, { name: 'Apple', sugar: 24}, {name: 'Orange', sugar: 21}])
+users = User.create({ email:'jz@ga.co', password: 'gustave', password_confirmation: 'gustave'})
