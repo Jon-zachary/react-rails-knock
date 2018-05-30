@@ -10,7 +10,6 @@ class App extends Component {
       juices: [],
       email: '',
       password:'',
-      token: '',
       isLoggedIn: null,
     };
     this.getJuices = this.getJuices.bind(this)
@@ -29,7 +28,6 @@ class App extends Component {
   }
 
   getJuices() {
-    console.log('getting juices');
     const jwt = localStorage.getItem("jwt")
     const init = { 
       headers: {"Authorization": `Bearer ${jwt}`}
@@ -39,9 +37,7 @@ class App extends Component {
     .then(data => this.setState({
       juices: data,
     }))
-    .then(console.log(this.state.juices))
     .catch(err => err)
-    console.log(this.isLoggedIn())
   }
 
   handleChange(e) {
@@ -77,6 +73,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+    this.isLoggedIn()
     this.getJuices()
   }
 
