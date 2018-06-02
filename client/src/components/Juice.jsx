@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 const Juice = (props) => {
   const juiceStyle = {
     backgroundColor: 'sandybrown',
-    margin: ' 0 600px 0 600px',
+    margin: '0 600px 0 600px',
   }
   return (<div style={juiceStyle}>
           <p> Name: {props.juice.name} </p>

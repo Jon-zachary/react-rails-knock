@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
-import Juice from './Juice';
-import Login from './Login';
-import Header from './Header';
+import Juice from './components/Juice';
+import Login from './components/Login';
+import Header from './components/Header';
+import JuiceForm from './components/JuiceForm';
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 class App extends Component {
@@ -14,6 +15,8 @@ class App extends Component {
       email: '',
       password:'',
       isLoggedIn: null,
+      name: '',
+      sugar: '',
     };
     this.getJuices = this.getJuices.bind(this)
     this.logout = this.logout.bind(this)
@@ -21,6 +24,39 @@ class App extends Component {
     this.isLoggedIn = this.isLoggedIn.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.delete = this.delete.bind(this)
+    this.submitNew = this.submitNew.bind(this)
+  }
+
+  login() {
+    const url = `${BASE_URL}/user_token`;
+    const body = {"auth": {"email": this.state.email, "password": this.state.password} }
+    const init = { method: 'POST',
+                   headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+                   mode: 'cors',
+                   body:JSON.stringify(body),
+                   }
+    fetch(url, init)
+    .then(res => res.json())
+    .then(res => localStorage.setItem("jwt", res.jwt))
+    .then(() => this.setState({
+      isLoggedIn: true,
+    }))
+    .then(() => this.getJuices())
+    .catch(err => console.log(err))
+  }
+
+  submitNew() {
+    const jwt = localStorage.getItem("jwt")
+    const body = {"juice": {"name": this.state.name, "sugar": this.state.sugar} }
+    const init = {
+      headers: {"Authorization": `Bearer ${jwt}`,'Content-Type': 'application/json', 'Accept': 'application/json'},
+      method: 'POST',
+      mode: 'cors',
+      body: JSON.stringify(body)
+    }
+    fetch(`${BASE_URL}/juices`, init)
+    .then(() => this.getJuices())
+    .catch(err => err.message)
   }
 
   delete(id) {
@@ -70,23 +106,7 @@ class App extends Component {
     })
   }
 
-  login() {
-    const url = `${BASE_URL}/user_token`;
-    const body = {"auth": {"email": this.state.email, "password": this.state.password} }
-    const init = { method: 'POST',
-                   headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-                   mode: 'cors',
-                   body:JSON.stringify(body),
-                   }
-    fetch(url, init)
-    .then(res => res.json())
-    .then(res => localStorage.setItem("jwt", res.jwt))
-    .then(() => this.setState({
-      isLoggedIn: true,
-    }))
-    .then(() => this.getJuices())
-    .catch(err => console.log(err))
-  }
+  
 
   componentDidMount() {
     this.isLoggedIn()
@@ -105,8 +125,14 @@ class App extends Component {
                  />
     return (
       <div className="App">
-        <Header logout={this.logout} />
+        <Header logout={this.logout} create={this.create} />
         <div> {display} </div>
+        <JuiceForm 
+        handleChange={this.handleChange} 
+        submitNew={this.submitNew} 
+        name={this.state.name}
+        sugar={this.state.sugar}
+        />
       </div>
     );
   }
