@@ -27,11 +27,6 @@ const Login = (props) => {
           <button onClick={props.login}>
           Login
           </button>
-
-          <button onClick={props.getJuices}>
-          Get Juices
-          </button>
-          </div>
     )
 }
 
