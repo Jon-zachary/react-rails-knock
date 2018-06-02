@@ -23,10 +23,8 @@ const Login = (props) => {
           />
           </form>
           <br />
-
-          <button onClick={props.login}>
-          Login
-          </button>
+          <button onClick={props.register}>Register</button> | <button onClick={props.login}>Login</button>
+          </div>
     )
 }
 

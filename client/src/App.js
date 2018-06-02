@@ -19,6 +19,7 @@ class App extends Component {
       sugar:'',
       isEdit:false,
       selectedJuiceId:null,
+      isRegister: false,
     };
     this.getJuices = this.getJuices.bind(this)
     this.logout = this.logout.bind(this)
@@ -30,6 +31,8 @@ class App extends Component {
     this.edit = this.edit.bind(this)
     this.showEditForm = this.showEditForm.bind(this)
     this.cancel = this.cancel.bind(this)
+    this.register = this.register.bind(this)
+    this.showRegisterForm = this.showRegisterForm.bind(this)
   }
 
   cancel() {
@@ -40,7 +43,28 @@ class App extends Component {
       selectedJuiceId:null,
     })
   }
+  
+  showRegisterForm() {
+    this.setState({
+      isRegister: true,
+    })
+  }
 
+  register() {
+    const url = `${BASE_URL}/users`
+    const body = {"user": {"email": this.state.email, "password":this.state.password}}
+    const init = { method: 'POST',
+                   headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+                   mode: 'cors',
+                   body:JSON.stringify(body)
+                 }
+    fetch(url, init)
+    .then(res => res.json())
+    .then(this.setState({
+      isRegister: false,
+    }))
+    .catch(err => err.message)
+  }
   login() {
     const url = `${BASE_URL}/user_token`;
     const body = {"auth": {"email": this.state.email, "password": this.state.password} }
@@ -148,6 +172,8 @@ class App extends Component {
     this.setState({
      isLoggedIn: false,
      juices: [],
+     name:"",
+     email:"",
     })
   }
 
@@ -170,13 +196,17 @@ class App extends Component {
         }) : <Login handleChange={this.handleChange}
                  login={this.login}
                  logout={this.logout}
-                 getJuices={this.getJuices}
                  email={this.state.email}
                  password={this.state.password}
+                 isRegister={this.state.isRegister}
+                 register={this.register}
                  />
     return (
       <div className="App">
-        <Header logout={this.logout} create={this.create} />
+        <Header 
+        logout={this.logout} 
+        create={this.create} r
+        showRegisterForm={this.showRegisterForm}/>
         <div> {display} </div>
         <JuiceForm 
         handleChange={this.handleChange} 
