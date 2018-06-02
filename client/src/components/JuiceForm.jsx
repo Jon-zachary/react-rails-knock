@@ -8,7 +8,7 @@ const style = {
 
 const JuiceForm = (props) => {
 const button = props.isEdit ? <div>
-                              <button onClick={() => props.submitEdit(props.id)}>Submit edit</button>
+                              <button onClick={() => props.edit(props.id)}>Submit edit</button>
                               <button onClick={props.cancel}>Cancel</button>
                               </div>
                             : <div>

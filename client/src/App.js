@@ -27,7 +27,7 @@ class App extends Component {
     this.handleChange = this.handleChange.bind(this)
     this.delete = this.delete.bind(this)
     this.submitNew = this.submitNew.bind(this)
-    this.submitEdit = this.submitEdit.bind(this)
+    this.edit = this.edit.bind(this)
     this.showEditForm = this.showEditForm.bind(this)
     this.cancel = this.cancel.bind(this)
   }
@@ -69,7 +69,7 @@ class App extends Component {
     })
   }
 
-  submitEdit(id) {
+  edit(id) {
     const jwt = localStorage.getItem("jwt")
     const body = {"juice": {"name": this.state.name, "sugar": this.state.sugar} }
     const init = {
@@ -185,7 +185,7 @@ class App extends Component {
         sugar={this.state.sugar}
         isEdit={this.state.isEdit}
         id={this.state.selectedJuiceId}
-        submitEdit={this.submitEdit}
+        edit={this.edit}
         cancel={this.cancel}
         />
       </div>
