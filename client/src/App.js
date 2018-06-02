@@ -16,7 +16,9 @@ class App extends Component {
       password:'',
       isLoggedIn: null,
       name: '',
-      sugar: '',
+      sugar:'',
+      isEdit:false,
+      selectedJuiceId:null,
     };
     this.getJuices = this.getJuices.bind(this)
     this.logout = this.logout.bind(this)
@@ -25,6 +27,18 @@ class App extends Component {
     this.handleChange = this.handleChange.bind(this)
     this.delete = this.delete.bind(this)
     this.submitNew = this.submitNew.bind(this)
+    this.submitEdit = this.submitEdit.bind(this)
+    this.showEditForm = this.showEditForm.bind(this)
+    this.cancel = this.cancel.bind(this)
+  }
+
+  cancel() {
+    this.setState({
+      name:'',
+      sugar:'',
+      isEdit:false,
+      selectedJuiceId:null,
+    })
   }
 
   login() {
@@ -43,6 +57,37 @@ class App extends Component {
     }))
     .then(() => this.getJuices())
     .catch(err => console.log(err))
+  }
+
+  showEditForm(id) {
+    const juice = this.state.juices.filter(juice => juice.id === id);
+    this.setState({
+      name: juice[0].name,
+      sugar: juice[0].sugar,
+      isEdit: true,
+      selectedJuiceId: juice[0].id
+    })
+  }
+
+  submitEdit(id) {
+    const jwt = localStorage.getItem("jwt")
+    const body = {"juice": {"name": this.state.name, "sugar": this.state.sugar} }
+    const init = {
+      headers: {"Authorization": `Bearer ${jwt}`,'Content-Type': 'application/json', 'Accept': 'application/json'},
+      method: 'PUT',
+      mode: 'cors',
+      body: JSON.stringify(body)
+    }
+    fetch(`${BASE_URL}/juices/${id}`, init)
+    .then(() => this.getJuices())
+    .then(this.setState({
+      name:'',
+      sugar:'',
+      isEdit:false,
+      selectedJuiceId:null,
+    }))
+    .catch(err => err.message)
+
   }
 
   submitNew() {
@@ -115,7 +160,13 @@ class App extends Component {
 
   render() {
     const display = this.state.isLoggedIn ? this.state.juices.map(juice => {
-          return <Juice key={juice.id} juice={juice} delete={this.delete} />
+          return (<Juice 
+          key={juice.id} 
+          juice={juice} 
+          delete={this.delete} 
+          edit={this.submitEdit}
+          showEditForm={this.showEditForm}
+          />)
         }) : <Login handleChange={this.handleChange}
                  login={this.login}
                  logout={this.logout}
@@ -132,6 +183,10 @@ class App extends Component {
         submitNew={this.submitNew} 
         name={this.state.name}
         sugar={this.state.sugar}
+        isEdit={this.state.isEdit}
+        id={this.state.selectedJuiceId}
+        submitEdit={this.submitEdit}
+        cancel={this.cancel}
         />
       </div>
     );

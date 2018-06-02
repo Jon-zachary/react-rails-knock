@@ -10,6 +10,8 @@ const Juice = (props) => {
           <p> Sugar: {props.juice.sugar} </p>
           <button style={{'backgroundColor':'lightblue'}} 
           onClick={() => props.delete(props.juice.id)}> Delete </button>
+          <button style={{'backgroundColor':'lightblue'}}
+          onClick={() => props.showEditForm(props.juice.id)}>Edit</button>
           </div>
           )
 } 

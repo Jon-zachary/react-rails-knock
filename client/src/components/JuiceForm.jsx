@@ -7,9 +7,17 @@ const style = {
 }
 
 const JuiceForm = (props) => {
+const button = props.isEdit ? <div>
+                              <button onClick={() => props.submitEdit(props.id)}>Submit edit</button>
+                              <button onClick={props.cancel}>Cancel</button>
+                              </div>
+                            : <div>
+                              <button onClick={props.submitNew}>Submit New</button>
+                              <button onClick={props.cancel}>Clear</button>
+                              </div>
 return(
 <div className="juiceForm" style={style}>
-  <h3> New Juice Form </h3>
+  <h3> Juice Form </h3>
   <form>
     <label htmlFor="name">Name:</label>
     <input 
@@ -27,7 +35,7 @@ return(
       type="text"
     />
   </form>
-  <button onClick={props.submitNew}>Submit</button>
+  {button}
 </div>
 )
 }
