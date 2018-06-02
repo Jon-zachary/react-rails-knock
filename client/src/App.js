@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
+import Juice from './Juice';
+import Login from './Login';
+import Header from './Header';
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 class App extends Component {
@@ -17,6 +20,19 @@ class App extends Component {
     this.login = this.login.bind(this)
     this.isLoggedIn = this.isLoggedIn.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.delete = this.delete.bind(this)
+  }
+
+  delete(id) {
+    const jwt = localStorage.getItem("jwt")
+    const init = { 
+      headers: {"Authorization": `Bearer ${jwt}`},
+      method: 'DELETE',
+      mode: 'cors',
+    }
+    fetch(`${BASE_URL}/juices/${id}`, init)
+    .then(()=> this.getJuices())
+    .catch(err => err.message)
   }
 
   isLoggedIn() {
@@ -39,7 +55,7 @@ class App extends Component {
     }))
     .catch(err => err)
   }
-
+ 
   handleChange(e) {
     this.setState({
       [e.target.name]:e.target.value
@@ -79,45 +95,18 @@ class App extends Component {
 
   render() {
     const display = this.state.isLoggedIn ? this.state.juices.map(juice => {
-          return <p key={juice.id}> Name:{juice.name}, Sugar:{juice.sugar} </p>
-        }) : "UNAUTHORIZED"
+          return <Juice key={juice.id} juice={juice} delete={this.delete} />
+        }) : <Login handleChange={this.handleChange}
+                 login={this.login}
+                 logout={this.logout}
+                 getJuices={this.getJuices}
+                 email={this.state.email}
+                 password={this.state.password}
+                 />
     return (
       <div className="App">
-        A-HENDUE
-        <form>
-          <label htmlFor="email">Email: </label>
-          <br />
-          <input
-            name="email"
-            onChange={this.handleChange}
-            value={this.state.email}
-            type="email"
-          />
-          <br /><br />
-          <label htmlFor="password">Password:</label>
-          <br />
-          <input
-            name="password"
-            onChange={this.handleChange}
-            value={this.state.value}
-            type="password"
-          />
-          </form>
-          <br />
-
-          <button onClick={this.login}>
-          Login
-          </button>
-
-          <button onClick={this.logout}>
-          Logout
-          </button>
-
-          <button onClick={this.getJuices}>
-          Get Juices
-          </button>
-
-          <div> {display} </div>
+        <Header logout={this.logout} />
+        <div> {display} </div>
       </div>
     );
   }
