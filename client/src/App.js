@@ -205,8 +205,9 @@ class App extends Component {
       <div className="App">
         <Header 
         logout={this.logout} 
-        create={this.create} r
-        showRegisterForm={this.showRegisterForm}/>
+        create={this.create}
+        showRegisterForm={this.showRegisterForm}
+        />
         <div> {display} </div>
         <JuiceForm 
         handleChange={this.handleChange} 
